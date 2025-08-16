@@ -55,4 +55,5 @@ if ! mkcert -install; then
 fi
 
 echo "🎉 Domain '$TLD' has been successfully configured!"
-echo "You may restart your browser to enable the SSL certificates."
+echo "You may need to restart your browser to load the new root CA and trust these certificates."
+echo "Happy coding!"
