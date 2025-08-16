@@ -99,7 +99,7 @@ $ docker network connect proxy mailhog
 
 ## Maintainers
 
-* Ronan Guérin - *Maintener*
+* Ronan Guérin - *Maintainer*
 
 ## Support
 
