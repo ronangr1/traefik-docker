@@ -1,6 +1,6 @@
 services:
   reverse-proxy:
-    image: traefik:3.3.2
+    image: traefik:3.5
     container_name: traefik
     restart: always
     network_mode: "host"
