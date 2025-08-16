@@ -1,0 +1,87 @@
+services:
+  reverse-proxy:
+    image: traefik:3.3.2
+    container_name: traefik
+    restart: always
+    network_mode: "host"
+    command:
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--providers.file.filename=/etc/traefik/dynamic_conf.yml"
+      - "--api.dashboard=true"
+      - "--log.level=DEBUG"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./certs:/certs:ro"
+      - "./dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro"
+
+  mailhog:
+    image: tsle/mail-mailhog-arm64:latest
+    container_name: mailhog
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailhog.rule=Host(`mailhog.ronan.localhost`)"
+      - "traefik.http.routers.mailhog.entrypoints=websecure"
+      - "traefik.http.routers.mailhog.tls=true"
+      - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
+    networks:
+      - proxy
+      - default
+
+  #  mailhog:
+  #    image: mailhog:latest
+  #    container_name: mailhog
+  #    restart: always
+  #    labels:
+  #      - "traefik.enable=true"
+  #      - "traefik.http.routers.mailhog.rule=Host(`mailhog.ronan.localhost`)"
+  #      - "traefik.http.routers.mailhog.entrypoints=websecure"
+  #      - "traefik.http.routers.mailhog.tls=true"
+  #      - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
+  #    networks:
+  #      - proxy
+  #      - default
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    container_name: swagger-ui
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.swagger.rule=Host(`swagger.ronan.localhost`)"
+      - "traefik.http.routers.swagger.entrypoints=websecure"
+      - "traefik.http.routers.swagger.tls=true"
+      - "traefik.http.services.swagger.loadbalancer.server.port=8080"
+    networks:
+      - proxy
+      - default
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    restart: always
+    volumes:
+      - "portainer_data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.portainer.rule=Host(`portainer.ronan.localhost`)"
+        - "traefik.http.routers.portainer.entrypoints=websecure"
+        - "traefik.http.routers.portainer.tls=true"
+        - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+    networks:
+      - default
+
+volumes:
+  portainer_data:
+    name: portainer_data
+    driver: local
+
+networks:
+  proxy:
+    name: proxy
+  default:
