@@ -1,5 +1,7 @@
 # Traefik Docker
 
+Zero‑hassle Traefik + Docker HTTPS setup for local and dev domains
+
 ## Setup
 
 ### Clone the repository
@@ -12,10 +14,8 @@ $ cd ~/.docker/traefik-docker
 ### Prerequisites
 
 ```bash
-$ sudo apt install -y docker-ce containerd.io
-$ sudo apt install -y libnss3-tools mkcert
-# Install docker-compose if not already installed
-$ sudo apt install -y docker-compose
+$ sudo apt install -y docker-ce # or use orbstack
+$ sudo apt install -y mkcert # brew install mkcert
 ```
 
 Tip: Docker 20.10+ is required to use the new `docker compose` command.
@@ -54,8 +54,8 @@ The first step is to replace the labels of the services that need to pass throug
 
 ```bash
 $ cd /path/to/your/project
-$ cp .env.dist .env
-$ code . # or any other editor
+$ cp .env.dist .env # or create a .env file
+$ code .env # or any other editor
 ```
 
 You must define your project's environment variables in the .env file at the root of your project. These are used to store credentials, ports and so on.
