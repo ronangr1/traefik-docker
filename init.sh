@@ -52,9 +52,6 @@ services:
       - "--providers.file.filename=/etc/traefik/dynamic_conf.yml"
       - "--api.dashboard=true"
       - "--log.level=DEBUG"
-    ports:
-      - "80:80"
-      - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./certs:/certs:ro"
